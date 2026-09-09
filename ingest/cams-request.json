@@ -1,0 +1,9 @@
+{
+  "variable": ["particulate_matter_10um", "total_aerosol_optical_depth_550nm", "surface_pressure", "dust_aerosol_0.03-0.55um_mixing_ratio", "dust_aerosol_0.55-0.9um_mixing_ratio", "dust_aerosol_0.9-20um_mixing_ratio", "temperature", "specific_humidity"],
+  "model_level": ["137"],
+  "date": "2026-09-08/2026-09-08",
+  "time": ["12:00"],
+  "leadtime_hour": ["9"],
+  "type": ["forecast"],
+  "data_format": "grib"
+}

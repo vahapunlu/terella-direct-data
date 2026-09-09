@@ -1,0 +1,232 @@
+[
+  {
+    "path": "ingest/build_gfs_candidate.py",
+    "bytes": 10271,
+    "sha256": "73967c9e883d8208b0a2d9a454054f6e2710420eeff19f779cf82eaf03f9bf8b"
+  },
+  {
+    "path": "ingest/noaa_grib.py",
+    "bytes": 8990,
+    "sha256": "143ea8c629080bdb214b936f18961bdb86a272776a27da1a89dba707a8cf3ec9"
+  },
+  {
+    "path": "ingest/build_cams_candidate.py",
+    "bytes": 5249,
+    "sha256": "db834465b27cd90851ed1ab169e4e21ff0a44286c6ba8361ca8a671914f9b988"
+  },
+  {
+    "path": "ingest/cams-request.json",
+    "bytes": 415,
+    "sha256": "38b7b7897539634416c0acf1182f40c87b316b4809e958132e34c47cb30ff6f5"
+  },
+  {
+    "path": "ingest/cams_plan.py",
+    "bytes": 2854,
+    "sha256": "cfeee272e70446ce5c292e0f38338a017bf76185c8cfef00039e96f6f4660f56"
+  },
+  {
+    "path": "ingest/build_temperature_candidate.py",
+    "bytes": 6661,
+    "sha256": "22fdf73750f343d09aac02d8094f2ade2a3370a3d1e6914d2d75f9009afecf91"
+  },
+  {
+    "path": "ingest/era5_daily.py",
+    "bytes": 1254,
+    "sha256": "24df6dbf63104bd0b6a4882ed97fdfc70c30c2d29d0133329acefcaec951f9bc"
+  },
+  {
+    "path": "ingest/build_temperature_bias.py",
+    "bytes": 2495,
+    "sha256": "1f5a61ba1b8f8219d085806ca08c70967088c83650d3f236948b30f409f3ddef"
+  },
+  {
+    "path": "ingest/verify_temperature_bias.py",
+    "bytes": 2462,
+    "sha256": "b442002738c55c0977006a2845ebfa09c3fbcd11ed4c4919a0fa01d69f666ead"
+  },
+  {
+    "path": "ingest/build_climate_candidate.py",
+    "bytes": 3070,
+    "sha256": "808ed47db09f46ddc0dbcabd71dd95dca49f7f23a0a7a7f2f6cee10ce7c5018b"
+  },
+  {
+    "path": "ingest/credentials.py",
+    "bytes": 457,
+    "sha256": "1071019ab184fa29ab002ae28abe894c07a4da453d1795f8830b2e152bdcfa4d"
+  },
+  {
+    "path": "ingest/refresh-plan.mjs",
+    "bytes": 2110,
+    "sha256": "60b75bd80551a9d5fa14443e7e87818bf02170878dc5aff50dd7e7ad73cc97fd"
+  },
+  {
+    "path": "ingest/refresh.mjs",
+    "bytes": 3522,
+    "sha256": "15bc9bb160274d5e970a495e771b5528022487f157d231e210a392ecbc0eda9e"
+  },
+  {
+    "path": "ingest/refresh_all.mjs",
+    "bytes": 892,
+    "sha256": "a7cb4ece8b44f4082c086ac9a5f419023f2a688ce2e7d3f26864a3a8f336204b"
+  },
+  {
+    "path": "ingest/refresh_cams.py",
+    "bytes": 3332,
+    "sha256": "83109bb7adbaa0e57ce4ffdcdbf7ccd5219dc980282e42b50426bdb6ebd4891c"
+  },
+  {
+    "path": "ingest/refresh_temperature.py",
+    "bytes": 765,
+    "sha256": "500a077adae713da5f4cfe96a709074af97232652c6719d91a3ee049c1cd1269"
+  },
+  {
+    "path": "ingest/refresh_climate_support.py",
+    "bytes": 11038,
+    "sha256": "9b2d637283c7f40486400ab835fc55b49fb236bf1ff2465f09a75c9f13f63044"
+  },
+  {
+    "path": "ingest/publish_bundle.mjs",
+    "bytes": 1414,
+    "sha256": "f4c2eda6fa80621f881d2abb2c6391892485515ffe1968e78d52cdece8a9aca5"
+  },
+  {
+    "path": "ingest/requirements.txt",
+    "bytes": 199,
+    "sha256": "e49dcbc29baf66802d6edd5ba153fecf2de59f34038dd1208c3f40f447e262cc"
+  },
+  {
+    "path": "ingest/test_cams.py",
+    "bytes": 679,
+    "sha256": "df56bfb9952bf2aba6bb76556df04c0eb48c1369966f81048c45636b8c06344e"
+  },
+  {
+    "path": "ingest/test_cams_archive.py",
+    "bytes": 1432,
+    "sha256": "1ea42656c18b87cef7cc07f9f2467eae28b40459a44896e69d1000be8460813a"
+  },
+  {
+    "path": "ingest/test_cams_plan.py",
+    "bytes": 2283,
+    "sha256": "09eea8cd59900b4c13c63d465773cb76c930e34420f8cc0db95462eb320ec4da"
+  },
+  {
+    "path": "ingest/test_download_retry.py",
+    "bytes": 1333,
+    "sha256": "d07b84842099f836985653d00b1d24eddc31422efdac9170a44ce0cd2b6b7b49"
+  },
+  {
+    "path": "ingest/test_gfs_candidate.py",
+    "bytes": 7343,
+    "sha256": "33d3a5c4641a34b8e13d55570898dbd5b674a64c696be0421c2ba9b664bb5f23"
+  },
+  {
+    "path": "ingest/test_noaa_grib.py",
+    "bytes": 3359,
+    "sha256": "f86ba51559781f7ef13614b83dff336051829c16ab2dd9f666f1cd046f72080f"
+  },
+  {
+    "path": "ingest/test_temperature_bias.py",
+    "bytes": 914,
+    "sha256": "76ef246aa407c6101f42965863b8cf8f1458e4e4e85fc880f2fcaf803f3ac504"
+  },
+  {
+    "path": "ingest/test_climate_support.py",
+    "bytes": 3026,
+    "sha256": "e1f28f960a8760da60dd16b12ede89c2d296398e019c1911b1d9f099c04b9088"
+  },
+  {
+    "path": "worker/weather-validator.ts",
+    "bytes": 4898,
+    "sha256": "63aba9b5ee46b3632d3536c75a6a245edf84098c3f0b3f128b76ede379d83116"
+  },
+  {
+    "path": "worker/aerosol-validator.mjs",
+    "bytes": 1228,
+    "sha256": "3484e112430450d766d01a7f520b909217e0f0d7c34dd3af92257c4b166fd470"
+  },
+  {
+    "path": "worker/climate-validator.mjs",
+    "bytes": 1600,
+    "sha256": "697071ee30ba8e56f4d4f83ff6b1feb490aef21b5ec001c295c4062331bec8e4"
+  },
+  {
+    "path": "tests/refresh.test.mjs",
+    "bytes": 1587,
+    "sha256": "4a6d09a40a2ade2c5679a3da50cbaa60642e3872b8933256361330018fe799df"
+  },
+  {
+    "path": "data/sample-sites.json",
+    "bytes": 16115,
+    "sha256": "008eaa9c17529c42f0a4e820c8514f6707a39b18684f088d2fc3b53e127c74b9"
+  },
+  {
+    "path": "data/weather-archive.json",
+    "bytes": 140575,
+    "sha256": "c38a354fac4886925501a42b5ae6cd7924fd175cf30b0f04bd7973271f8aa186"
+  },
+  {
+    "path": "data/aerosol-archive.json",
+    "bytes": 77071,
+    "sha256": "dfb1837f80bd056fb90ead19176fbb6142699a2ddafe4e0802bd9018ec65a567"
+  },
+  {
+    "path": "data/aerosol-candidate.json",
+    "bytes": 8562,
+    "sha256": "4c559a195b3bda757de5bf97117c793575425e829fe95efce49b02b7ef58be7d"
+  },
+  {
+    "path": "data/temperature-candidate.json",
+    "bytes": 19337,
+    "sha256": "19c984b6abcc7fb0c6faa1473c6cb053daaad74e021771a6cc7c77e3c5365b49"
+  },
+  {
+    "path": "data/climate-candidate.json",
+    "bytes": 19868,
+    "sha256": "3264b54e7cf357a64f6d62e653a1e0a7d547fa5f3230f169b199b62998e37a8e"
+  },
+  {
+    "path": "data/era5-normal-candidate.json",
+    "bytes": 8593,
+    "sha256": "cebf09b17f10fa027c8939ad65a2de03b826de068a810133e494f9ef6b3729b6"
+  },
+  {
+    "path": "data/temperature-bias-candidate.json",
+    "bytes": 9430,
+    "sha256": "2229e3fda41cc8ba142fa9e2289468f23fd37413cb22d6ef852c300a012e84bf"
+  },
+  {
+    "path": "data/temperature-calibration-pairs.json",
+    "bytes": 227293,
+    "sha256": "8d8c9e6d644311d1589acbe7fe5b0acb230d729eacc1b1d1cb72fe686d8afcab"
+  },
+  {
+    "path": "data/temperature-independent-pairs.json",
+    "bytes": 48730,
+    "sha256": "2e386ee542c8571ad117bb28b05d0958e237e918f131c687f57b08f6b7584213"
+  },
+  {
+    "path": "package.json",
+    "bytes": 138,
+    "sha256": "cf84be92b4b0fd6af73482d0afcc5bfe549e8b8e58bdd0218025f7bae427581b"
+  },
+  {
+    "path": ".gitignore",
+    "bytes": 54,
+    "sha256": "8a0043f2d2ecb7be633c04f002d0ee60a791996a10208bd5eb4f3333d3a4c67b"
+  },
+  {
+    "path": "README.md",
+    "bytes": 1226,
+    "sha256": "a8e6839b8b2bc5908bf6d16ed4a8c1713802c476266eca54889b085ffc75d540"
+  },
+  {
+    "path": "workflow-templates/refresh.yml",
+    "bytes": 1991,
+    "sha256": "d881114af27bae9e7396a81d592adf88e2261466d20ec383fa045236b5e7476e"
+  },
+  {
+    "path": "workflow-templates/renew-climate.yml",
+    "bytes": 1798,
+    "sha256": "7353c754cbc8f2e83235d1e1bb0806f78419a50e08cd75d89cda5d86ce5186dd"
+  }
+]

@@ -1,0 +1,8 @@
+# Separate ingestion/probe environment; never bundled into the phone app.
+eccodes==2.46.0
+numpy==2.3.5
+cdsapi==0.7.7
+ecmwf-datastores-client==0.5.3
+xarray==2026.7.0
+netCDF4==1.7.4
+certifi==2026.7.22
