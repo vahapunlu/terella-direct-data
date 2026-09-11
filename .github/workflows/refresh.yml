@@ -1,6 +1,8 @@
 name: Direct public weather data
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '17 */3 * * *'
 concurrency:
   group: direct-weather-data
   cancel-in-progress: false
