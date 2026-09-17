@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "frozenAt": "2026-09-17T05:39:33.702174+00:00",
+  "siteKey": "ldpvbl",
+  "biasSha256": "68002cddd0164cef32905644efcde820d6e4c2836db6ef43bf6100809643f682",
+  "days": [
+    "2026-09-11",
+    "2026-09-12",
+    "2026-09-13"
+  ],
+  "earliestEvaluationDay": "2026-09-20",
+  "limits": {
+    "countryMaeC": 1,
+    "countryP95C": 2,
+    "countryMaxC": 4,
+    "mustImproveRaw": true
+  },
+  "rules": [
+    "Fixed coefficients; no refitting on these days.",
+    "Every one of the 410 points and 225 country groups remains included.",
+    "Country reference agreement does not certify station accuracy.",
+    "No mobile migration or automatic source switch."
+  ],
+  "purpose": "Untouched forward audit of the retained active baseline; not acceptance of a new fitted method."
+}

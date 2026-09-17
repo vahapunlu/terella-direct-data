@@ -1,6 +1,11 @@
 name: Renew public climate support
 on:
   workflow_dispatch:
+    inputs:
+      audit_only:
+        description: 'Validate existing calibration without refitting or renewing normal'
+        type: boolean
+        default: false
   schedule:
     - cron: '43 0 * * *'
 concurrency:
@@ -21,24 +26,35 @@ jobs:
       - name: Install scientific readers without shared cache storage
         run: python -m pip install --no-cache-dir -r ingest/requirements.txt
       - name: Test date boundaries and rejection safeguards
+        id: checks
         run: python -m unittest discover -s ingest -p 'test_*.py'
       - name: Renew only due climate support
         id: support
+        if: inputs.audit_only != true
         continue-on-error: true
         env:
           CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
         run: python ingest/refresh_climate_support.py --run
+      - name: Audit active calibration on independent dates
+        id: quality
+        if: always() && !cancelled() && steps.checks.outcome == 'success'
+        continue-on-error: true
+        env:
+          CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
+        run: |
+          python ingest/audit_temperature_quality.py --fetch
       - name: Preserve accepted support and sampled progress
-        if: always() && steps.support.outcome != 'skipped'
+        if: always() && (steps.support.outcome != 'skipped' || steps.quality.outcome != 'skipped')
         run: |
           git config user.name 'Terella data job'
           git config user.email 'actions@users.noreply.github.com'
           git add data/era5-normal-candidate.json data/temperature-bias-candidate.json
           if test -f data/climate-support-cache.json; then git add data/climate-support-cache.json; fi
+          if test -f data/temperature-quality.json; then git add data/temperature-quality.json; fi
           if ! git diff --cached --quiet; then
             git commit -m 'Renew validated climate support'
             git push
           fi
       - name: Report a rejected or incomplete renewal
-        if: steps.support.outcome == 'failure'
+        if: steps.support.outcome == 'failure' || steps.quality.outcome == 'failure'
         run: exit 1
