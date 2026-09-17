@@ -21,5 +21,14 @@
     "Country reference agreement does not certify station accuracy.",
     "No mobile migration or automatic source switch."
   ],
-  "purpose": "Untouched forward audit of the retained active baseline; not acceptance of a new fitted method."
+  "purpose": "Untouched forward audit of the retained active baseline; not acceptance of a new fitted method.",
+  "operationalDays": [
+    "2026-09-14",
+    "2026-09-15",
+    "2026-09-16"
+  ],
+  "operationalEarliestDay": "2026-09-23",
+  "operationalGfsSha256": "1d486a7433f45ca28c688f7bb29532f15362b20fab8309dc8ba925078d27f1d5",
+  "operationalFrozenAt": "2026-09-17T05:46:15.930902+00:00",
+  "operationalReason": "First three actual use days of the retained September 14 bias; 10-12 day training-to-use gap. GFS forecasts pinned to actual data commits before ERA5 validation."
 }

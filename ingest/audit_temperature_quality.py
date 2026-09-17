@@ -52,6 +52,18 @@ def evaluate_bias(records, manifest, bias):
                           'rawDifferenceC':float(raw[t,i]),'correctedDifferenceC':float(corrected[t,i])}}
 
 
+def operational_records(plan, archive, observations, manifest):
+    if digest(archive)!=plan['operationalGfsSha256']:
+        raise ValueError('Frozen operational forecasts changed')
+    rows=archive['records']
+    if [r['day'] for r in rows]!=plan['operationalDays'] or any(
+            r['siteKey']!=manifest['siteKey'] for r in rows):
+        raise ValueError('Operational forecast days/sites changed')
+    if len(observations)!=len(rows):
+        raise ValueError('Incomplete operational reference')
+    return [{'day':r['day'],'gfs':r['gfs'],'era5':list(o)} for r,o in zip(rows,observations)]
+
+
 def make_report(root, target, fetch=False):
     from refresh_climate_support import SampleStore, atomic_json
     read=lambda name:json.loads((root/'data'/name).read_text())
@@ -69,6 +81,7 @@ def make_report(root, target, fetch=False):
     result={'schema':1,'checkedAt':datetime.now(timezone.utc).isoformat(),'targetDay':str(target),
             'status':'complete','reference':'ERA5 daily UTC mean; not station observations',
             'scope':'Country-mean reference agreement; local extremes remain visible',
+            'activeBiasEvaluationType':'Retrospective check of current coefficients, not a replay of historical deployments',
             'activeBias':evaluate_bias(records,manifest,bias),'mobileMigrationApproved':False,
             'researchAccuracyCertified':False,'removedSites':0,'changedCoefficients':False}
     plan_path=root/'data/temperature-validation-plan.json'
@@ -90,6 +103,17 @@ def make_report(root, target, fetch=False):
             frozen_records=[{'day':str(d),'era5':list(o),'gfs':list(g)}
                             for d,o,g in zip(frozen_days,observations,forecasts)]
             result['frozenHoldout']={'status':'complete',**evaluate_bias(frozen_records,manifest,frozen)}
+        if 'operationalDays' in plan:
+            if plan['operationalEarliestDay']>str(target):
+                result['operationalHoldout']={'status':'pending','days':plan['operationalDays'],
+                                              'earliestEvaluationDay':plan['operationalEarliestDay']}
+            else:
+                operational_days=[date.fromisoformat(d) for d in plan['operationalDays']]
+                observations=(samples.era5(operational_days) if fetch else
+                              [samples.value['era5'][str(d)] for d in operational_days])
+                actual=operational_records(plan,read('validation-operational-gfs.json'),observations,manifest)
+                result['operationalHoldout']={'status':'complete',
+                                              **evaluate_bias(actual,manifest,frozen)}
     atomic_json(root/'data/temperature-quality.json',result)
     return result
 

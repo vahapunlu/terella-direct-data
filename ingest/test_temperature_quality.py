@@ -7,7 +7,7 @@ import sys
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'site-private/ingest'))
-from audit_temperature_quality import evaluate_bias, main
+from audit_temperature_quality import evaluate_bias, main, operational_records, digest
 
 
 class QualityAuditTest(unittest.TestCase):
@@ -35,6 +35,14 @@ class QualityAuditTest(unittest.TestCase):
     def test_nonfinite_offset_never_looks_healthy(self):
         with self.assertRaises(ValueError):
             evaluate_bias(self.records,self.sites,{**self.bias,'offsetsC':[float('nan'),-2]})
+
+    def test_operational_audit_uses_immutable_actual_forecasts(self):
+        archive={'records':[{'day':r['day'],'gfs':r['gfs'],'siteKey':'fixed'} for r in self.records]}
+        plan={'operationalGfsSha256':digest(archive),'operationalDays':[r['day'] for r in self.records]}
+        actual=operational_records(plan,archive,[[20,20]]*3,self.sites)
+        self.assertTrue(evaluate_bias(actual,self.sites,self.bias)['passed'])
+        archive['records'][0]['gfs']=[0,0]
+        with self.assertRaises(ValueError):operational_records(plan,archive,[[20,20]]*3,self.sites)
 
     def test_unavailable_reference_replaces_old_pass_with_incomplete_without_secret_text(self):
         with tempfile.TemporaryDirectory() as d:
