@@ -4,7 +4,8 @@ from pathlib import Path
 import tempfile
 import unittest
 import numpy as np
-from refresh_climate_support import normal_days, calibration_days, build_normal, build_bias, plan, atomic_json
+from refresh_climate_support import normal_days, calibration_days, build_normal, build_bias, plan, atomic_json, BiasRejected
+from build_climate_candidate import build as build_climate, ClimateBlocked
 
 
 class ClimateSupportTest(unittest.TestCase):
@@ -56,6 +57,27 @@ class ClimateSupportTest(unittest.TestCase):
                 atomic_json(path, build_bias(target, manifest, observations,
                                             lambda day: [22.0 if day in training else 35.0]))
             self.assertEqual(json.loads(path.read_text()), good)
+
+    def test_rejection_carries_metrics_not_a_success_or_new_coefficient(self):
+        manifest = {'siteKey': 'test', 'sites': [{'iso3': 'TUR'}]}
+        target = date(2026, 9, 19)
+        training, _ = calibration_days(target)
+        with self.assertRaises(BiasRejected) as raised:
+            build_bias(target, manifest, lambda days: np.full((len(days), 1), 20.0),
+                       lambda day: [22.0 if day in training else 35.0])
+        report = raised.exception.report
+        self.assertGreater(report['metrics']['countryMaxC'], report['limits']['countryMaxC'])
+        self.assertNotIn('offsetsC', report)
+
+    def test_expired_bias_is_rejected_without_extending_the_fourteen_day_limit(self):
+        sites = {'siteKey': 'test', 'sites': [{'iso3': 'TUR'}]}
+        normal = {'siteKey': 'test', 'source': {'years': list(range(2006, 2026))},
+                  'daysPerSite': 220, 'builtFor': '2026-09-16'}
+        temperature = {'todayCache': {'siteKey': 'test', 'date': '2026-09-19'}, 'source': {}}
+        bias = {'siteKey': 'test', 'pilotAccepted': True, 'lastDay': '2026-09-04'}
+        with self.assertRaises(ClimateBlocked) as raised:
+            build_climate(sites, normal, temperature, bias)
+        self.assertEqual(raised.exception.code, 'calibration-expired-or-overlapping')
 
 
 if __name__ == '__main__':

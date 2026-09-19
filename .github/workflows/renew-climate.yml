@@ -51,6 +51,7 @@ jobs:
           git add data/era5-normal-candidate.json data/temperature-bias-candidate.json
           if test -f data/climate-support-cache.json; then git add data/climate-support-cache.json; fi
           if test -f data/temperature-quality.json; then git add data/temperature-quality.json; fi
+          if test -f data/climate-renewal-status.json; then git add data/climate-renewal-status.json; fi
           if ! git diff --cached --quiet; then
             git commit -m 'Renew validated climate support'
             git push

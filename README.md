@@ -9,3 +9,19 @@ The data is a pilot: country temperature bias is compared with ERA5 on unseen da
 CAMS data: Contains modified Copernicus Atmosphere Monitoring Service information (2026), CC-BY-4.0. ERA5 data: Copernicus Climate Change Service, CC-BY-4.0. NOAA GFS: NOAA/NCEP public forecast model. Upstream dataset terms remain applicable.
 
 Offline checks: node --test tests/*.test.mjs and python -m unittest discover -s ingest -p 'test_*.py'. Plan climate renewal with python ingest/refresh_climate_support.py --plan. Manual workflows are installed first; scheduled runs are enabled only after the initial Linux validation succeeds.
+
+## Partial failures and calibration expiry
+
+`data/refresh-status.json` records each refresh component and whether the combined
+bundle was published. `data/climate-renewal-status.json` records renewal outcomes;
+rejected bias candidates include the independent validation metrics and unchanged
+limits. The Actions step summaries expose these reports without raw subprocess
+errors or credential-bearing HTTP messages. Failed renewals still fail the job.
+
+A bias older than 14 days is not applied to a new forecast. The previous climate
+result retains its original date. Once older than 48 hours, only an identical
+JSON value already in the previous published bundle may be retained, after its
+scientific structure is revalidated. This lets valid weather and aerosol updates
+continue without silently publishing a new stale climate candidate. The bundle
+explicitly reports `stale-retained`; web consumers keep their existing 48-hour
+staleness warning. No thresholds, fitting method, or validation windows are relaxed.

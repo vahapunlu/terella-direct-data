@@ -22,6 +22,12 @@ YEARS = list(range(2006, 2026))
 SCOPE = 'Country means only; per-site extremes are not certified'
 
 
+class BiasRejected(ValueError):
+    def __init__(self, report):
+        super().__init__('Independent calibration validation failed')
+        self.report = report
+
+
 def atomic_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     part = path.with_suffix('.part')
@@ -96,7 +102,15 @@ def build_bias(target, manifest, get_era5, get_gfs):
                  **fit(records[:14], len(manifest['sites']))}
     metrics, accepted = evaluate(records[14:], manifest['sites'], candidate['offsetsC'])
     if not accepted or max(abs(x) for x in candidate['offsetsC']) > 15:
-        raise ValueError('New independent country validation failed; retain previous bias')
+        raise BiasRejected({
+            'reason': 'independent-validation-rejected',
+            'trainingLastDay': candidate['lastDay'],
+            'holdoutDays': [str(d) for d in holdout_days],
+            'metrics': metrics,
+            'limits': {'countryMaeC': 1, 'countryP95C': 2, 'countryMaxC': 4,
+                       'mustImproveRaw': True, 'maxAbsoluteCorrectionC': 15},
+            'maxAbsoluteCorrectionC': max(abs(x) for x in candidate['offsetsC']),
+        })
     candidate['samplePilotAccepted'] = candidate['pilotAccepted']
     candidate['pilotAccepted'] = True
     candidate['countryValidation'] = {
@@ -206,11 +220,13 @@ def main():
     normal, bias = read('era5-normal-candidate.json'), read('temperature-bias-candidate.json')
     selected = plan(target, normal, bias)
     print(json.dumps({'mode': 'run' if args.run else 'plan-only', **selected}), flush=True)
-    if not args.run or not (selected['normalDue'] or selected['biasDue']):
+    if not args.run:
         return
     manifest = read('sample-sites.json')
     samples = SampleStore(ROOT, manifest)
     failures = []
+    report = {'schema': 1, 'checkedAt': datetime.now(timezone.utc).isoformat(),
+              'targetDay': str(target), 'status': 'complete', 'components': {}}
     # Each component is committed only after complete scientific acceptance.
     for name, due, build in [
         ('era5-normal-candidate.json', selected['normalDue'], lambda: build_normal(target, manifest, samples.era5)),
@@ -219,10 +235,24 @@ def main():
         if due:
             try:
                 atomic_json(ROOT / 'data' / name, build())
-            except Exception:
+                report['components'][name] = {'status': 'renewed'}
+            except Exception as error:
                 failures.append(name)
+                report['status'] = 'degraded'
+                report['components'][name] = {
+                    'status': 'rejected' if isinstance(error, BiasRejected) else 'incomplete',
+                    'previousDataRetained': True,
+                    **(error.report if isinstance(error, BiasRejected) else {'reason': 'renewal-incomplete'}),
+                }
                 # Never serialize clients, request headers or credential-bearing exceptions.
                 print(name + ': renewal failed; previous accepted component retained', file=sys.stderr)
+        else:
+            report['components'][name] = {'status': 'not-due'}
+    atomic_json(ROOT / 'data/climate-renewal-status.json', report)
+    print(json.dumps(report), flush=True)
+    if os.environ.get('GITHUB_STEP_SUMMARY'):
+        with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+            summary.write('# Climate support renewal\n\n```json\n' + json.dumps(report, indent=2) + '\n```\n')
     if failures:
         raise SystemExit(1)
     samples.prune(target)
