@@ -20,6 +20,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12'
@@ -28,6 +30,8 @@ jobs:
       - name: Test date boundaries and rejection safeguards
         id: checks
         run: python -m unittest discover -s ingest -p 'test_*.py'
+      - name: Snapshot previously reported issues
+        run: python ingest/notification_policy.py snapshot renew
       - name: Renew only due climate support
         id: support
         if: inputs.audit_only != true
@@ -43,6 +47,13 @@ jobs:
           CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
         run: |
           python ingest/audit_temperature_quality.py --fetch
+      - name: Compare notification state without changing quality acceptance
+        id: notifications
+        if: always() && !cancelled() && steps.checks.outcome == 'success'
+        env:
+          SUPPORT_OUTCOME: ${{ steps.support.outcome }}
+          QUALITY_OUTCOME: ${{ steps.quality.outcome }}
+        run: python ingest/notification_policy.py decide renew
       - name: Preserve accepted support and sampled progress
         if: always() && (steps.support.outcome != 'skipped' || steps.quality.outcome != 'skipped')
         run: |
@@ -56,6 +67,6 @@ jobs:
             git commit -m 'Renew validated climate support'
             git push
           fi
-      - name: Report a rejected or incomplete renewal
-        if: steps.support.outcome == 'failure' || steps.quality.outcome == 'failure'
+      - name: Report a new rejection or incomplete renewal
+        if: steps.notifications.outputs.alert_required != 'false'
         run: exit 1

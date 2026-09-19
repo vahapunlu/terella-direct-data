@@ -15,6 +15,8 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12'
@@ -27,6 +29,8 @@ jobs:
         run: |
           python -m unittest discover -s ingest -p 'test_*.py'
           node --test tests/*.test.mjs
+      - name: Snapshot previously reported issues
+        run: python ingest/notification_policy.py snapshot refresh
       - name: Refresh bounded data components
         id: refresh
         continue-on-error: true
@@ -36,6 +40,12 @@ jobs:
         run: |
           export TERELLA_WEB_PYTHON="$(command -v python)"
           node ingest/refresh_all.mjs
+      - name: Compare notification state without hiding data failures
+        id: notifications
+        if: always() && steps.refresh.outcome != 'skipped'
+        env:
+          REFRESH_OUTCOME: ${{ steps.refresh.outcome }}
+        run: python ingest/notification_policy.py decide refresh
       - name: Save completed data only
         if: always() && steps.refresh.outcome != 'skipped'
         run: |
@@ -49,6 +59,6 @@ jobs:
             git commit -m 'Refresh direct model data'
             git push
           fi
-      - name: Report a failed component after preserving successful updates
-        if: steps.refresh.outcome == 'failure'
+      - name: Report a new or unclassified failure after preserving successful updates
+        if: steps.notifications.outputs.alert_required != 'false'
         run: exit 1
