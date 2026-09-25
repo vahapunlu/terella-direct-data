@@ -1,1 +1,1 @@
-{"schema":1,"checkedAt":"2026-09-24T01:11:40.818604+00:00","targetDay":"2026-09-24","status":"complete","components":{"era5-normal-candidate.json":{"status":"renewed"},"temperature-bias-candidate.json":{"status":"renewed"}}}
+{"schema":1,"checkedAt":"2026-09-25T01:12:01.876607+00:00","targetDay":"2026-09-25","status":"complete","components":{"era5-normal-candidate.json":{"status":"not-due"},"temperature-bias-candidate.json":{"status":"not-due"}}}
