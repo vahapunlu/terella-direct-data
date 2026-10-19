@@ -57,7 +57,12 @@ async function save(path, value) {
   await rename(path + '.tmp', path);
 }
 async function fetchText(url, fetchImpl, timeoutMs) {
-  const r = await fetchImpl(url, { signal: AbortSignal.timeout(timeoutMs), headers: { Accept: 'application/json,text/csv' } });
+  let r;
+  try {
+    r = await fetchImpl(url, { signal: AbortSignal.timeout(timeoutMs), headers: { Accept: 'application/json,text/csv' } });
+  } catch (error) {
+    throw Error(`Source transport ${error.cause?.code ?? error.code ?? error.name}`);
+  }
   if (!r.ok) throw Error(`Source HTTP ${r.status}`);
   const reader = r.body.getReader();
   const chunks = []; let size = 0;

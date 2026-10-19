@@ -25,6 +25,9 @@ jobs:
         run: node --test tests/mobile-side-feeds.test.mjs
       - name: Refresh public source caches
         run: node ingest/mobile-side-feeds.mjs .
+      - name: Diagnose NOAA transport
+        run: |
+          curl --silent --show-error --head --max-time 20 https://coastwatch.pfeg.noaa.gov/erddap/info/ncdcOisst21NrtAgg/index.html || true
       - name: Preserve only side-feed files
         run: |
           git config user.name 'Terella data job'
