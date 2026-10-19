@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '7 * * * *'
-# Serialize with the existing data writers; no concurrent git push overwrites.
+# Separate queue: hourly runs must not cancel pending weather/climate jobs.
 concurrency:
-  group: direct-weather-data
+  group: mobile-side-feeds
   cancel-in-progress: false
 permissions:
   contents: write
@@ -32,7 +32,12 @@ jobs:
           git add data/mobile-side-feeds
           if ! git diff --cached --quiet; then
             git commit -m 'Refresh mobile launch and ocean caches'
-            git push
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push; then break; fi
+              if test "$attempt" = 3; then exit 1; fi
+              sleep 2
+            done
           fi
       - name: Summarize real component status
         if: always()

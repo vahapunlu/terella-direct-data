@@ -57,7 +57,12 @@ jobs:
           if test -f data/refresh-status.json; then git add data/refresh-status.json; fi
           if ! git diff --cached --quiet; then
             git commit -m 'Refresh direct model data'
-            git push
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push; then break; fi
+              if test "$attempt" = 3; then exit 1; fi
+              sleep 2
+            done
           fi
       - name: Report a new or unclassified failure after preserving successful updates
         if: steps.notifications.outputs.alert_required != 'false'

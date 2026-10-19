@@ -21,9 +21,11 @@ components retain their dated last-good files. Component status is published in
 `data/mobile-side-feeds/status.json`; a green workflow does not certify freshness.
 
 This uses the existing standard public Ubuntu runner with no new secrets,
-packages, artifacts or paid services. Its concurrency group matches existing
-writers and its git allowlist contains only `data/mobile-side-feeds`. It changes
-no web model/calibration files. The mobile ingest Worker validates the fixed
+packages, artifacts or paid services. It has its own queue so hourly runs cannot
+cancel a queued weather/climate job. All three writers rebase their disjoint file
+commits before pushing, with bounded non-force retries. The new writer's git
+allowlist contains only `data/mobile-side-feeds`. It changes no web model/calibration
+files. The mobile ingest Worker validates the fixed
 mirror's source/schema/age/coordinates and uses its existing direct sources as
 fallback. Provider quota refusals retain the existing retry backoff.
 
