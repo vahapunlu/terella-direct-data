@@ -1,0 +1,46 @@
+name: Refresh mobile side feeds
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7 * * * *'
+# Serialize with the existing data writers; no concurrent git push overwrites.
+concurrency:
+  group: direct-weather-data
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  refresh:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Validate collector
+        run: node --test tests/mobile-side-feeds.test.mjs
+      - name: Refresh public source caches
+        run: node ingest/mobile-side-feeds.mjs .
+      - name: Preserve only side-feed files
+        run: |
+          git config user.name 'Terella data job'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/mobile-side-feeds
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh mobile launch and ocean caches'
+            git push
+          fi
+      - name: Summarize real component status
+        if: always()
+        run: |
+          if test -f data/mobile-side-feeds/status.json; then
+            echo '### Mobile side-feed status' >> "$GITHUB_STEP_SUMMARY"
+            echo 'A retained source keeps its original timestamp; workflow success does not imply fresh data.' >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat data/mobile-side-feeds/status.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi

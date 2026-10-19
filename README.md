@@ -10,6 +10,28 @@ CAMS data: Contains modified Copernicus Atmosphere Monitoring Service informatio
 
 Offline checks: node --test tests/*.test.mjs and python -m unittest discover -s ingest -p 'test_*.py'. Plan climate renewal with python ingest/refresh_climate_support.py --plan. Manual workflows are installed first; scheduled runs are enabled only after the initial Linux validation succeeds.
 
+## Mobile launch and ocean side feeds
+
+`mobile-side-feeds.yml` collects public Launch Library 2 schedules hourly and
+NOAA OISST v2.1 preliminary anomaly CSV on completed UTC days (12-hour cache).
+Cloudflare's shared egress was throttled by LL2 and timed out at NOAA even while
+the same requests worked outside Workers. The independent source cache retains
+original payloads, observation times and successful retrieval times; failed
+components retain their dated last-good files. Component status is published in
+`data/mobile-side-feeds/status.json`; a green workflow does not certify freshness.
+
+This uses the existing standard public Ubuntu runner with no new secrets,
+packages, artifacts or paid services. Its concurrency group matches existing
+writers and its git allowlist contains only `data/mobile-side-feeds`. It changes
+no web model/calibration files. The mobile ingest Worker validates the fixed
+mirror's source/schema/age/coordinates and uses its existing direct sources as
+fallback. Provider quota refusals retain the existing retry backoff.
+
+Launch data: The Space Devs / Launch Library 2 (https://thespacedevs.com/llapi).
+Ocean: NOAA NCEI OISST v2.1 preliminary via NOAA CoastWatch ERDDAP (degree C).
+Only standalone public-source collection code and public data are mirrored;
+no mobile UI, app bundle, account data or cloud credentials are stored here.
+
 ## Partial failures and calibration expiry
 
 `data/refresh-status.json` records each refresh component and whether the combined
