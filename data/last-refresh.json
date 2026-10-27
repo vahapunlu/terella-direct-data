@@ -1,26 +1,26 @@
 {
-  "at": "2026-10-27T03:33:45.859Z",
-  "durationSeconds": 1.93,
-  "selectedBytes": 3828428,
-  "candidateBytes": 14086,
-  "sha256": "8bb582a3d4592a7a25ab80d4dc28c786f4052d183192e574b7f103c9b6994931",
+  "at": "2026-10-27T06:43:49.794Z",
+  "durationSeconds": 2.525,
+  "selectedBytes": 3663595,
+  "candidateBytes": 14574,
+  "sha256": "2c56fb07b1990ddd007191f7c91e6bee7c4bf834d5d38a06462e01ec03171480",
   "entries": 16,
   "source": {
     "model": "NOAA GFS",
-    "url": "https://noaa-gfs-bdp-pds.s3.amazonaws.com/gfs.20261026/18/atmos/gfs.t18z.pgrb2.0p25.f009",
-    "runAt": "2026-10-26T18:00:00Z",
+    "url": "https://noaa-gfs-bdp-pds.s3.amazonaws.com/gfs.20261027/00/atmos/gfs.t00z.pgrb2.0p25.f006",
+    "runAt": "2026-10-27T00:00:00Z",
     "sourceGridDegrees": 0.25,
     "sampling": "bilinear; no elevation downscaling",
-    "forecastHour": 9,
+    "forecastHour": 6,
     "rainWindowHours": [
-      6,
-      9
+      3,
+      6
     ],
-    "rainMethod": "native-three-hour",
-    "earlierRainUrl": null,
-    "selectedBytes": 3828428
+    "rainMethod": "difference-0-6-minus-0-3",
+    "earlierRainUrl": "https://noaa-gfs-bdp-pds.s3.amazonaws.com/gfs.20261027/00/atmos/gfs.t00z.pgrb2.0p25.f003",
+    "selectedBytes": 3663595
   },
-  "validAt": "2026-10-27T03:00:00Z",
+  "validAt": "2026-10-27T06:00:00Z",
   "deployed": false,
   "cloudJob": false
 }
