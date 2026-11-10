@@ -1,1 +1,1 @@
-{"checkedAt":"2026-11-10T00:34:17.703Z","components":{"launches":{"state":"updated","fetchedAt":"2026-11-10T00:34:18.436Z","count":12},"ocean":{"state":"updated","observedAt":"2026-11-08T12:00:00Z","fetchedAt":"2026-11-10T00:34:21.234Z"}}}
+{"checkedAt":"2026-11-10T01:15:01.702Z","components":{"launches":{"state":"retained-fresh","fetchedAt":"2026-11-10T00:34:18.436Z"},"ocean":{"state":"updated","observedAt":"2026-11-08T12:00:00Z","fetchedAt":"2026-11-10T01:15:04.282Z"}}}
