@@ -1,1 +1,1 @@
-{"checkedAt":"2026-11-21T09:15:38.885Z","components":{"launches":{"state":"stale-retained","fetchedAt":"2026-11-21T08:18:03.159Z","error":"Error: Source transport 23"},"ocean":{"state":"updated","observedAt":"2026-11-18T12:00:00Z","fetchedAt":"2026-11-21T09:16:08.283Z"}}}
+{"checkedAt":"2026-11-21T10:13:38.223Z","components":{"launches":{"state":"updated","fetchedAt":"2026-11-21T10:13:38.867Z","count":17},"ocean":{"state":"updated","observedAt":"2026-11-18T12:00:00Z","fetchedAt":"2026-11-21T10:13:43.852Z"}}}
